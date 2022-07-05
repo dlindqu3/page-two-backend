@@ -50,17 +50,18 @@ def get_current_list_by_category(request, category):
 # }
 
 # create a saved item 
-@api_view(['POST'])
-def create_saved_list_item(request): 
-  print('request.data: ', request.data)
-  serializer = CurrentBestSellersListItemSerializer(data=request.data,  many=False)
-  # if serializer is valid, send to db 
-  if serializer.is_valid(): 
-    serializer.save()
-  else:
-    print('serializer invalid')
-    return JsonResponse({'errors': serializer.errors, 'input_data': request.data, 'validated_data': serializer.validated_data})
-  return Response(serializer.data)
+@api_view(['GET', 'POST'])
+def create_saved_list_item(request):
+  if request.method == 'POST':
+    serializer = CurrentBestSellersListItemSerializer(data=request.data,  many=False)
+    
+    if serializer.is_valid(): 
+      serializer.save()
+      return Response(serializer.data)
+    else:
+      return JsonResponse({'errors': serializer.errors, 'input_data': request.data, 'validated_data': serializer.validated_data})
+  
+  return Response('If not a post request, show this message instead')
 
 
 # read/get all saved lists' items 
