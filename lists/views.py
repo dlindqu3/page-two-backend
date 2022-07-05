@@ -7,8 +7,10 @@ from .models import CurrentBestSellersListItem
 from datetime import date
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import serializers
 from .serializers import CurrentBestSellersListItemSerializer
-
+import json
+from rest_framework.renderers import JSONRenderer
 
 
 nyt_key = os.environ.get('NYT_KEY')
@@ -35,25 +37,42 @@ def get_current_list_by_category(request, category):
 # require a user action after API call to create/save a particular item 
 
 #fix 
+
+
+# {
+# "rank": 555, 
+# "weeks_on_list": 555, 
+# "publisher": "a", 
+# "description": "b", 
+# "title": "c", 
+# "author": "d",
+# "amazon_product_url": "amazon.com/books/5"
+# }
+
 # create a saved item 
 @api_view(['POST'])
-def create_saved_list_item(item_data): 
-  serializer = CurrentBestSellersListItemSerializer(data=item_data)
+def create_saved_list_item(request): 
+  print('request.data: ', request.data)
+  serializer = CurrentBestSellersListItemSerializer(data=request.data,  many=False)
   # if serializer is valid, send to db 
   if serializer.is_valid(): 
     serializer.save()
+  else:
+    print('serializer invalid')
+    return JsonResponse({'errors': serializer.errors, 'input_data': request.data, 'validated_data': serializer.validated_data})
   return Response(serializer.data)
+
 
 # read/get all saved lists' items 
 @api_view(['GET'])
-def all_saved_lists_items(request): 
+def get_all_saved_lists_items(request): 
   all_lists_items = CurrentBestSellersListItem.objects.all()
   serializer = CurrentBestSellersListItemSerializer(all_lists_items, many=True)
   return Response(serializer.data)
 
 # read/get a single list item's detail 
 @api_view(['GET'])
-def saved_list_item_detail(request, pk): 
+def get_saved_list_item_detail(request, pk): 
   list = CurrentBestSellersListItem.objects.get(id=pk)
   serializer = CurrentBestSellersListItemSerializer(list, many=False)
   return Response(serializer.data)
