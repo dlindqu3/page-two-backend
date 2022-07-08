@@ -39,15 +39,15 @@ def get_current_list_by_category(request, category):
 #fix 
 
 
-# {
-# "rank": 555, 
-# "weeks_on_list": 555, 
-# "publisher": "a", 
-# "description": "b", 
-# "title": "c", 
-# "author": "d",
-# "amazon_product_url": "amazon.com/books/5"
-# }
+{
+"rank": 555, 
+"weeks_on_list": 555, 
+"publisher": "a", 
+"description": "b", 
+"title": "c", 
+"author": "d",
+"amazon_product_url": "https://amazon.com/books/"
+}
 
 # create a saved item 
 @api_view(['GET', 'POST'])
@@ -61,7 +61,7 @@ def create_saved_list_item(request):
     else:
       return JsonResponse({'errors': serializer.errors, 'input_data': request.data, 'validated_data': serializer.validated_data})
   
-  return Response('If not a post request, show this message instead')
+  return Response('res')
 
 
 # read/get all saved lists' items 
@@ -79,7 +79,7 @@ def get_saved_list_item_detail(request, pk):
   return Response(serializer.data)
 
 # delete single list item 
-@api_view(['DELETE'])
+@api_view(['DELETE', 'GET'])
 def item_delete(request, pk): 
   item = CurrentBestSellersListItem.objects.get(id=pk)
   item.delete()
