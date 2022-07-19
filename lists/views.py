@@ -22,11 +22,8 @@ def get_current_list_by_category(request, category):
   
   response = requests.get(url)
   data = response.json()
-  t1 = data['results']['books'][0]['title']
-  a1 = data['results']['books'][0]['author']
-  result = f'{a1}: {t1}'
- 
-  return JsonResponse(result, safe=False)
+  base = data['results']['books']
+  return JsonResponse(base, safe=False)
 
 # methods 
   # create a saved item 

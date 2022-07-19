@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
   # base url /api/
   # example: http://127.0.0.1:8000/api/lists/hardcover-fiction
-  # path('lists/<str:category>/', views.get_current_list_by_category, name='get_current_list_by_category'),
+  path('lists/<str:category>/', views.get_current_list_by_category, name='get_current_list_by_category'),
 
 
   path('lists-items/', views.get_all_saved_lists_items, name='get_all_saved_lists_items'),
